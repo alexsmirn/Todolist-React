@@ -1,0 +1,42 @@
+.error {
+    border: 2px red solid;
+}
+
+.error-message {
+    color: red
+}
+
+.filter-button {
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.current-filter {
+    border: #1b6984 1px solid;
+    border-radius: 5px;
+    background-color: #3095c7;
+    color: white;
+    cursor: pointer;
+}
+
+.is-done {
+    opacity: 0.7;
+}
+
+.filter-button-container {
+    display: flex;
+    gap: 5px;
+}
+
+.delete-todolist {
+    border: #f44336 2px solid;
+    background-color: transparent;
+    border-radius: 5px;
+    color: #f44336;
+    cursor: pointer;
+}
+
+.delete-todolist:hover {
+    background-color: rgba(244, 67, 54, 0.38);
+}
