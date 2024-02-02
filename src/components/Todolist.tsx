@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
+import React from 'react';
 import '../todolist.css'
 import {FilterType} from "../App";
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 export type TaskType = {
@@ -73,7 +75,9 @@ export const Todolist: React.FC<TodolistPropsType> = (props) => {
                 return <li key={el.id} className={el.isDone ? 'is-done' : ''}>
                     <Checkbox checked={el.isDone} onChange={onCheckboxChangeHandler}/>
                     <EditableSpan setChanges={(newValue) => onChangeTaskTitleChangeHandler(newValue)} title={el.title}/>
-                    <button onClick={() => onRemoveTaskHandler(props.todolistId, el.id)}>x</button>
+                    <IconButton onClick={() => onRemoveTaskHandler(props.todolistId, el.id)}>
+                        <DeleteIcon />
+                    </IconButton>
                 </li>
             })}
         </ul>

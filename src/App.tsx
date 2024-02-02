@@ -3,6 +3,13 @@ import './App.css';
 import {Todolist} from "./components/Todolist";
 import {v1} from "uuid";
 import {AddItemForm} from "./components/AddItemForm";
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import {Container, Grid} from "@mui/material";
 
 export type FilterType = 'all' | 'active' | 'completed'
 
@@ -76,23 +83,50 @@ function App() {
 
     return (
         <div className="App">
-            <AddItemForm addItem={addTodolist}/>
-            {todolists.map(el => {
-                return <Todolist key={el.todolistId}
-                                 todolistId={el.todolistId}
-                                 title={el.title}
-                                 tasks={tasks[el.todolistId]}
-                                 filter={el.filter}
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{ mr: 2 }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        News
+                    </Typography>
+                    <Button color="inherit">Login</Button>
+                </Toolbar>
+            </AppBar>
+            <Container fixed>
+                <Grid container>
+                    <AddItemForm addItem={addTodolist}/>
+                </Grid>
+                <Grid container spacing={10}>
+                    {todolists.map(el => {
+                        return (
+                            <Grid item>
+                                <Todolist key={el.todolistId}
+                                          todolistId={el.todolistId}
+                                          title={el.title}
+                                          tasks={tasks[el.todolistId]}
+                                          filter={el.filter}
 
-                                 removeTask={removeTask}
-                                 addTask={addTask}
-                                 changeTaskStatus={changeTaskStatus}
-                                 changeFilter={changeFilter}
-                                 deleteTodolist={deleteTodolist}
-                                 changeTaskTitle={changeTaskTitle}
-                                 changeTodolistTitle={changeTodolistTitle}
-                />
-            })}
+                                          removeTask={removeTask}
+                                          addTask={addTask}
+                                          changeTaskStatus={changeTaskStatus}
+                                          changeFilter={changeFilter}
+                                          deleteTodolist={deleteTodolist}
+                                          changeTaskTitle={changeTaskTitle}
+                                          changeTodolistTitle={changeTodolistTitle}
+                                />
+                            </Grid>
+                            )
+                    })}
+                </Grid>
+            </Container>
         </div>
     );
 }
