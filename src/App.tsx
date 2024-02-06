@@ -13,7 +13,7 @@ import {Container, Grid} from "@mui/material";
 
 export type FilterType = 'all' | 'active' | 'completed'
 
-type TodolistType = {
+export type TodolistType = {
     todolistId: string
     title: string
     filter: FilterType
