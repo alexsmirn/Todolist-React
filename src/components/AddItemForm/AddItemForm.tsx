@@ -1,5 +1,5 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
-import '../todolist.css'
+import '../../todolist.css'
 import TextField from '@mui/material/TextField';
 import IconButton from "@mui/material/IconButton";
 import AddBoxIcon from '@mui/icons-material/AddBox';
@@ -8,7 +8,8 @@ type AddItemFormPropsType = {
     addItem: (title: string) => void
 }
 
-export const AddItemForm = (props: AddItemFormPropsType) => {
+export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
+    console.log('AddItemForm is called')
 
     const [newTaskTitle, setNewTaskTitle] = useState<string>('')
     const [error, setError] = useState<string | null>('')
@@ -18,9 +19,9 @@ export const AddItemForm = (props: AddItemFormPropsType) => {
     }
 
     const onEnterPressHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-
-        setError(null)
-
+        if (error !== null) {
+            setError(null)
+        }
         if (event.charCode === 13) {
             addItem()
         }
@@ -39,7 +40,7 @@ export const AddItemForm = (props: AddItemFormPropsType) => {
 
     return (
         <div>
-            <TextField error={!!error} onChange={ onInputChangeHandler}
+            <TextField error={!!error} onChange={onInputChangeHandler}
                        value={newTaskTitle}
                        type="text"
                        id="outlined-basic"
@@ -55,4 +56,4 @@ export const AddItemForm = (props: AddItemFormPropsType) => {
             {error && <div className={'error-message'}>{error}</div>}
         </div>
     )
-}
+})

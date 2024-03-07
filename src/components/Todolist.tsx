@@ -1,12 +1,10 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import '../todolist.css'
 import {FilterType} from "../App";
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import {AddItemForm} from "./AddItemForm";
+import {AddItemForm} from "./AddItemForm/AddItemForm";
 import {EditableSpan} from "./EditableSpan";
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
+import {Task} from "./Task";
 
 
 export type TaskType = {
@@ -22,16 +20,21 @@ export type TodolistPropsType = {
     todolistId: string
 
     //Callbacks
-    removeTask: (todolistId: string, taskId: string) => void
     addTask: (todolistId: string, title: string) => void
-    changeTaskStatus: (todolistId: string, taskId: string) => void
     changeFilter: (todolistId: string, newFilterValue: FilterType) => void
     deleteTodolist: (todolistId: string) => void
-    changeTaskTitle: (todolistId: string, taskId: string, newValue: string) => void
     changeTodolistTitle: (todolistId: string, newTitle: string) => void
+
+    changeTaskStatus: (todolistId: string, taskId: string) => void
+    changeTaskTitle: (todolistId: string, taskId: string, newValue: string) => void
+    removeTask: (todolistId: string, taskId: string) => void
 }
 
-export const Todolist: React.FC<TodolistPropsType> = (props) => {
+
+
+export const Todolist: React.FC<TodolistPropsType> = React.memo((props) => {
+
+    console.log(`Todolist is called ${props.todolistId.slice(0, 8)}`)
 
     // const [filter, setFilter] = useState<FilterType>('all')
     let filteredTasks = props.tasks
@@ -41,9 +44,6 @@ export const Todolist: React.FC<TodolistPropsType> = (props) => {
     if (props.filter === 'completed') filteredTasks = props.tasks.filter(el => el.isDone)
 
     //Handlers
-    const onRemoveTaskHandler = (todolistId: string, taskId: string) => {
-        props.removeTask(todolistId, taskId)
-    }
 
     const onFilterClickHandler = (todolistId: string, filterValue: FilterType) => {
         props.changeFilter(todolistId, filterValue)
@@ -53,33 +53,21 @@ export const Todolist: React.FC<TodolistPropsType> = (props) => {
         props.changeTodolistTitle(props.todolistId, newTitle)
     }
 
-
-    const addTask = (title: string) => {
+    const addTask = useCallback((title: string) => {
         props.addTask(props.todolistId, title)
-    }
+    }, [])
 
     return <div>
         <EditableSpan setChanges={(newValue) => onTodolistTitleChange(newValue)} title={props.title}/>
         <AddItemForm addItem={addTask}/>
         <ul>
-            {filteredTasks.map(el => {
-
-                const onCheckboxChangeHandler = () => {
-                    props.changeTaskStatus(props.todolistId, el.id)
-                }
-
-                const onChangeTaskTitleChangeHandler = (newValue: string) => {
-                    props.changeTaskTitle(props.todolistId, el.id, newValue)
-                }
-
-                return <li key={el.id} className={el.isDone ? 'is-done' : ''}>
-                    <Checkbox checked={el.isDone} onChange={onCheckboxChangeHandler}/>
-                    <EditableSpan setChanges={(newValue) => onChangeTaskTitleChangeHandler(newValue)} title={el.title}/>
-                    <IconButton onClick={() => onRemoveTaskHandler(props.todolistId, el.id)}>
-                        <DeleteIcon />
-                    </IconButton>
-                </li>
-            })}
+            {filteredTasks !== undefined ? filteredTasks.map(el => {
+                return <Task task={el} key={el.id}
+                             todolistId={props.todolistId}
+                             removeTask={props.removeTask}
+                             changeTaskTitle={props.changeTaskTitle}
+                             changeTaskStatus={props.changeTaskStatus}/>
+            }) : <div></div>}
         </ul>
         <div className={'filter-button-container'}>
             <Button size='small' variant={props.filter === 'all' ? 'contained' : 'outlined'} className={props.filter === 'all' ? 'current-filter' : 'filter-button'}
@@ -93,9 +81,9 @@ export const Todolist: React.FC<TodolistPropsType> = (props) => {
             </Button>
         </div>
         <Button size='small' variant="outlined" color='error'
-            className={'delete-todolist'} onClick={() => props.deleteTodolist(props.todolistId)}>Delete Todolist</Button>
+                className={'delete-todolist'} onClick={() => props.deleteTodolist(props.todolistId)}>Delete Todolist</Button>
     </div>
-};
+});
 
 
 
